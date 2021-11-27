@@ -22,8 +22,11 @@ class MoveRequest(State):
     pass
 
 
+Move = Literal["up", "down", "left", "right"]
+
+
 class MoveResponse(TypedDict):
-    move: Literal["up", "down", "left", "right"]
+    move: Move
     shout: Optional[str]
 
 

@@ -1,17 +1,18 @@
 import logging
 import os
+import time
 
-from quart import Quart
-from quart import request
+from flask import Flask
+from flask import request
 
 import logic
 from api_types.api import InfoResponse, StartRequest, MoveResponse, MoveRequest, EndRequest
 
-app = Quart(__name__)
+app = Flask(__name__)
 
 
 @app.get("/")
-async def handle_info() -> InfoResponse:
+def handle_info() -> InfoResponse:
     print("INFO")
     return {
         "apiversion": "1",
@@ -24,25 +25,24 @@ async def handle_info() -> InfoResponse:
 
 
 @app.post("/start")
-async def handle_start() -> str:
-    data: StartRequest = await request.get_json()
+def handle_start() -> str:
+    data: StartRequest = request.get_json()
     print(f"{data['game']['id']} START")
     return "."
 
 
 @app.post("/move")
-async def handle_move() -> MoveResponse:
-    data: MoveRequest = await request.get_json()
-    return logic.move(data)
+def handle_move() -> MoveResponse:
+    data: MoveRequest = request.get_json()
+    move = logic.get_move(data)
+    print(f"{data['game']['id']} MOVE: {move['move']}")
+    time.sleep(0.1)
+    return move
 
 
 @app.post("/end")
-async def end() -> str:
-    """
-    This function is called when a game your snake was in ends.
-    It's purely for informational purposes, you don't have to make any decisions here.
-    """
-    data: EndRequest = await request.get_json()
+def handle_end() -> str:
+    data: EndRequest = request.get_json()
 
     print(f"{data['game']['id']} END")
     return "."
