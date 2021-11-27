@@ -52,6 +52,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
         second_possible = False
         if first:
             if first.food:
+                food_moves.add(move1)
                 first_food_moves.add(move1)
             for move2 in all_moves - {opposites[move1]}:
                 second = first.move(move2)
