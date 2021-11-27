@@ -49,9 +49,9 @@ def get_move(state: MoveRequest) -> MoveResponse:
         first = head.move(move1)
         second_possible = False
         if first:
-            if first.food and you.health <= 50:
+            if first.food and you.health <= 30:
                 preferred_moves.add(move1)
-            elif first.food and you.health >= 80:
+            elif first.food and you.health >= 50:
                 disliked_moves.add(move1)
             for move2 in all_moves - {opposites[move1]}:
                 second = first.move(move2)
@@ -59,7 +59,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
                     second_possible = True
                     if second.head and second.snake.length >= you.length:
                         disliked_moves.add(move1)
-                    elif second.food and you.health <= 50:
+                    elif second.food and you.health <= 30:
                         preferred_moves.add(move1)
         if not second_possible:
             possible_moves.discard(move1)
