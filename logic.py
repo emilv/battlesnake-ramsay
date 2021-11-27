@@ -66,8 +66,6 @@ def get_move(state: MoveRequest) -> MoveResponse:
             possible_moves.discard(move1)
 
     # Pick move
-    my_move: Move = "up"
-
     safe_moves = possible_moves - fight_moves
 
     hungry = (safe_moves & food_moves) if you.health < 30 else set()
@@ -83,16 +81,40 @@ def get_move(state: MoveRequest) -> MoveResponse:
         ("fight", fight_moves),
     ]
 
+    my_move: Move = "up"
+    found = False
     for txt, prio_set in prio:
         st = possible_moves & prio_set
         if not st: continue
         if current_direction in st:
             print(f"PICK current FROM {txt}")
             my_move = current_direction
+            found = True
             break
         else:
             print(f"PICK random  FROM {txt}")
             my_move = random.choice(list(st))
+            found = True
             break
+
+    if not found:
+        print("DEATH BY head-on crash?")
+        my_move = current_direction
+        for direction in all_moves - {opposites[current_direction]}:
+            mv = head.move(direction)
+            if not mv:
+                if not found:
+                    print("DEATH BY border?")
+                    my_move = direction
+                    continue
+            if mv.you:
+                print("DEATH BY seppuku?")
+                my_move = direction
+                found = True
+                continue
+            if not mv.snake:
+                print("DEATH BY freedom!")
+                my_move = direction
+                break
 
     return MoveResponse(move=my_move, shout=None)
