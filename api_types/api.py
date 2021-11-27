@@ -1,6 +1,6 @@
-from typing import Optional, Literal
+from typing import Optional
 
-from typing_extensions import TypedDict
+from typing_extensions import Literal, TypedDict
 
 from api_types.game import State
 

@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+from typing import cast
 
 from flask import Flask
 from flask import request
@@ -26,14 +27,14 @@ def handle_info() -> InfoResponse:
 
 @app.post("/start")
 def handle_start() -> str:
-    data: StartRequest = request.get_json()
+    data = cast(StartRequest, request.get_json())
     print(f"{data['game']['id']} START")
     return "."
 
 
 @app.post("/move")
 def handle_move() -> MoveResponse:
-    data: MoveRequest = request.get_json()
+    data = cast(MoveRequest, request.get_json())
     move = logic.get_move(data)
     print(f"{data['game']['id']} MOVE: {move['move']}")
     time.sleep(0.1)
@@ -42,7 +43,7 @@ def handle_move() -> MoveResponse:
 
 @app.post("/end")
 def handle_end() -> str:
-    data: EndRequest = request.get_json()
+    data = cast(EndRequest, request.get_json())
 
     print(f"{data['game']['id']} END")
     return "."
