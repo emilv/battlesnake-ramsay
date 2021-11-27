@@ -83,11 +83,11 @@ def get_move(state: MoveRequest) -> MoveResponse:
     for txt, st in prio:
         if not st: continue
         if current_direction in st:
-            print(f"pick current direction from {txt}")
+            print(f"PICK current FROM {txt}")
             my_move = current_direction
             break
         else:
-            print(f"pick random from {txt}")
+            print(f"PICK random  FROM {txt}")
             my_move = random.choice(list(st))
             break
 
