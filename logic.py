@@ -15,6 +15,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
 
     border_moves: Set[Move] = set()
     food_moves: Set[Move] = set()
+    first_food_moves: Set[Move] = set()
     fight_moves: Set[Move] = set()
 
     x = you.head.x
@@ -51,7 +52,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
         second_possible = False
         if first:
             if first.food:
-                food_moves.add(move1)
+                first_food_moves.add(move1)
             for move2 in all_moves - {opposites[move1]}:
                 second = first.move(move2)
                 if second:
@@ -69,7 +70,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
     safe_moves = possible_moves - fight_moves
 
     hungry = (safe_moves & food_moves) if you.health < 30 else set()
-    neutral_moves = safe_moves - border_moves - food_moves
+    neutral_moves = safe_moves - border_moves - first_food_moves
 
     prio = [
         ("hungry", hungry),
