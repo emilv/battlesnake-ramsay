@@ -37,7 +37,6 @@ def handle_move() -> MoveResponse:
     data = cast(MoveRequest, request.get_json())
     move = logic.get_move(data)
     print(f"{data['game']['id']} MOVE: {move['move']}")
-    time.sleep(0.1)
     return move
 
 
