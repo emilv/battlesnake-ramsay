@@ -126,12 +126,17 @@ def get_move(state: MoveRequest) -> MoveResponse:
 
     # Pick move
     my_move: Move = "up"
-    #if current_direction in possible_moves:
-    #    print("pick current direction")
-    #    my_move = current_direction
-    #elif
-    if possible_moves:
+    if current_direction in possible_moves:
+        print("pick current direction")
+        my_move = current_direction
+    elif possible_moves:
         print("pick random")
         my_move = random.choice(list(possible_moves))
+
+    for move in possible_moves:
+        sq = head.move(move)
+        if sq.food:
+            print("pick food")
+            my_move = move
 
     return {"move": my_move, "shout": None}
