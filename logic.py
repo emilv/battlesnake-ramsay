@@ -12,9 +12,10 @@ def get_move(state: MoveRequest) -> MoveResponse:
     all_moves: Set[Move] = {"up", "down", "left", "right"}
     opposites: Dict[Move, Move] = {"up": "down", "down": "up", "left": "right", "right": "left"}
     possible_moves: Set[Move] = all_moves.copy()
-    disliked_moves: Set[Move] = set()
-    preferred_moves: Set[Move] = set()
+
     border_moves: Set[Move] = set()
+    food_moves: Set[Move] = set()
+    fight_moves: Set[Move] = set()
 
     x = you.head.x
     y = you.head.y
@@ -38,48 +39,45 @@ def get_move(state: MoveRequest) -> MoveResponse:
         if next_square.body:
             possible_moves.discard(move)
 
-    # Dislike border moves
+    # Identify border moves
     for move in possible_moves:
         sq = head.move(move)
         if sq and sq.is_border:
             border_moves.add(move)
-            disliked_moves.add(move)
 
-    # Dislike moves with opponent head two steps away
-    # Prefer moves with food 1-2 steps away
+    # What happens when we move two steps?
     for move1 in possible_moves.copy():
         first = head.move(move1)
         second_possible = False
         if first:
-            if first.food and you.health <= 30:
-                preferred_moves.add(move1)
-            elif first.food and you.health >= 50:
-                disliked_moves.add(move1)
+            if first.food:
+                food_moves.add(move1)
             for move2 in all_moves - {opposites[move1]}:
                 second = first.move(move2)
                 if second:
                     second_possible = True
                     if second.head and second.snake.length >= you.length:
-                        disliked_moves.add(move1)
-                    elif second.food and you.health <= 30:
-                        preferred_moves.add(move1)
+                        fight_moves.add(move1)
+                    if second.food:
+                        food_moves.add(move1)
         if not second_possible:
             possible_moves.discard(move1)
 
     # Pick move
     my_move: Move = "up"
 
-    preferred_moves -= disliked_moves
-    preferred_moves &= possible_moves
+    safe_moves = possible_moves - fight_moves
 
-    neutral_moves = possible_moves - disliked_moves - preferred_moves
+    hungry = (safe_moves & food_moves) if you.health < 30 else set()
+    neutral_moves = safe_moves - border_moves - food_moves
 
     prio = [
-        ("preferred", preferred_moves),
+        ("hungry", hungry),
         ("neutral", neutral_moves),
-        ("border neutral", border_moves - disliked_moves),
-        ("border disliked", border_moves),
-        ("disliked", disliked_moves),
+        ("safe no border", safe_moves - border_moves),
+        ("safe border", safe_moves & border_moves),
+        ("safe", safe_moves),
+        ("fight", fight_moves),
     ]
 
     for txt, st in prio:
