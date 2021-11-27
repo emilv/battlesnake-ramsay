@@ -3,11 +3,11 @@ import os
 import time
 from typing import cast
 
-from flask import Flask
-from flask import request
+from flask import Flask, request
 
 import logic
-from api_types.api import InfoResponse, StartRequest, MoveResponse, MoveRequest, EndRequest
+from api_types.api import (EndRequest, InfoResponse, MoveRequest, MoveResponse,
+                           StartRequest)
 
 app = Flask(__name__)
 

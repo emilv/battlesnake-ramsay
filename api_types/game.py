@@ -1,4 +1,5 @@
 from typing import List
+
 from typing_extensions import TypedDict
 
 from api_types.rules import Game
