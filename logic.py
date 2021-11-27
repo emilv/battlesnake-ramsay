@@ -45,8 +45,9 @@ def get_move(state: MoveRequest) -> MoveResponse:
 
     # Dislike moves with opponent head two steps away
     # Prefer moves with food 1-2 steps away
-    for move1 in possible_moves:
+    for move1 in possible_moves.copy():
         first = head.move(move1)
+        second_possible = False
         if first:
             if first.food and you.health <= 50:
                 preferred_moves.add(move1)
@@ -55,10 +56,13 @@ def get_move(state: MoveRequest) -> MoveResponse:
             for move2 in all_moves - {opposites[move1]}:
                 second = first.move(move2)
                 if second:
+                    second_possible = True
                     if second.head and second.snake.length >= you.length:
                         disliked_moves.add(move1)
                     elif second.food and you.health <= 50:
                         preferred_moves.add(move1)
+        if not second_possible:
+            possible_moves.discard(move1)
 
     # Pick move
     my_move: Move = "up"
