@@ -75,6 +75,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
 
     prio = [
         ("hungry", hungry),
+        ("neutral food stink", neutral_moves - food_moves),
         ("neutral", neutral_moves),
         ("safe no border", safe_moves - border_moves),
         ("safe border", safe_moves & border_moves),
