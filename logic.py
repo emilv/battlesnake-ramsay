@@ -83,7 +83,8 @@ def get_move(state: MoveRequest) -> MoveResponse:
         ("fight", fight_moves),
     ]
 
-    for txt, st in prio:
+    for txt, prio_set in prio:
+        st = possible_moves & prio_set
         if not st: continue
         if current_direction in st:
             print(f"PICK current FROM {txt}")
