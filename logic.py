@@ -14,6 +14,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
     possible_moves: Set[Move] = all_moves.copy()
     disliked_moves: Set[Move] = set()
     preferred_moves: Set[Move] = set()
+    border_moves: Set[Move] = set()
 
     x = you.head.x
     y = you.head.y
@@ -41,6 +42,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
     for move in possible_moves:
         sq = head.move(move)
         if sq and sq.is_border:
+            border_moves.add(move)
             disliked_moves.add(move)
 
     # Dislike moves with opponent head two steps away
@@ -75,6 +77,8 @@ def get_move(state: MoveRequest) -> MoveResponse:
     prio = [
         ("preferred", preferred_moves),
         ("neutral", neutral_moves),
+        ("border neutral", border_moves - disliked_moves),
+        ("border disliked", border_moves),
         ("disliked", disliked_moves),
     ]
 
