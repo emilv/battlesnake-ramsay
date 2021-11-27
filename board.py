@@ -44,8 +44,8 @@ class Board:
     squares: List[List[Square]]
 
     def __init__(self, state: MoveRequest):
-        height = state['board']['height']
-        width = state['board']['width']
+        height = state.board.height
+        width = state.board.width
         self.squares = [
             [self.Square(x, y) for y in range(height)]
             for x in range(width)
@@ -68,20 +68,20 @@ class Board:
                 if not sq.is_right:
                     sq.right = self.squares[sq.x + 1][sq.y]
 
-        for xy in state['board']['food']:
-            self.squares[xy['x']][xy['y']].food = True
-        for xy in state['board']['hazards']:
-            self.squares[xy['x']][xy['y']].hazard = True
+        for xy in state.board.food:
+            self.squares[xy.x][xy.y].food = True
+        for xy in state.board.hazards:
+            self.squares[xy.x][xy.y].hazard = True
 
-        you_id = state['you']['id']
-        for s in state['board']['snakes']:
-            is_you = s['id'] == you_id
-            for i, xy in enumerate(s['body']):
-                sq = self.squares[xy['x']][xy['y']]
+        you_id = state.you.id
+        for s in state.board.snakes:
+            is_you = s.id == you_id
+            for i, xy in enumerate(s.body):
+                sq = self.squares[xy.x][xy.y]
                 sq.body = True
                 sq.head = i == 0
                 sq.your_neck = i == 1 and is_you
-                sq.tail = i == s['length'] - 1
+                sq.tail = i == s.length - 1
                 sq.you = is_you
                 sq.snake = s
 

@@ -7,19 +7,19 @@ from board import Board
 
 def get_move(state: MoveRequest) -> MoveResponse:
     board = Board(state)
-    you = state['you']
+    you = state.you
 
     all_moves: Set[Move] = {"up", "down", "left", "right"}
     possible_moves: Set[Move] = all_moves.copy()
     opposites: Dict[Move, Move] = {"up": "down", "down": "up", "left": "right", "right": "left"}
 
-    x = you['head']['x']
-    y = you['head']['y']
+    x = you.head.x
+    y = you.head.y
     head = board[x][y]
 
     # Find current direction and discard backwards move
     current_direction: Move = "up"
-    if you['length'] > 1:
+    if you.length > 1:
         for move in all_moves:
             sq = head.move(move)
             if sq and sq.your_neck:
@@ -50,4 +50,4 @@ def get_move(state: MoveRequest) -> MoveResponse:
             print("pick food")
             my_move = move
 
-    return {"move": my_move, "shout": None}
+    return MoveResponse(move=my_move, shout=None)

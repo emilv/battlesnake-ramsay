@@ -1,9 +1,10 @@
 import logging
 import os
-import time
-from typing import cast
+from dataclasses import asdict
+from typing import Type, TypeVar
 
-from flask import Flask, request
+from dacite import from_dict
+from flask import Flask, jsonify, request
 
 import logic
 from api_types.api import (EndRequest, InfoResponse, MoveRequest, MoveResponse,
@@ -11,40 +12,48 @@ from api_types.api import (EndRequest, InfoResponse, MoveRequest, MoveResponse,
 
 app = Flask(__name__)
 
+T = TypeVar("T")
+
+
+def _get_json(data_class: Type[T]) -> T:
+    data = request.get_json()
+    if not isinstance(data, dict):
+        raise TypeError
+    return from_dict(data_class=data_class, data=data)
+
 
 @app.get("/")
-def handle_info() -> InfoResponse:
+def handle_info():
     print("INFO")
-    return {
-        "apiversion": "1",
-        "author": "lajm",
-        "color": "#6699cc",
-        "head": "all-seeing",
-        "tail": "default",
-        "version": "0.0.1"
-    }
+    return jsonify(InfoResponse(
+        apiversion="1",
+        author="lajm",
+        color="#6699cc",
+        head="all-seeing",
+        tail="default",
+        version="0.0.2",
+    ))
 
 
 @app.post("/start")
-def handle_start() -> str:
-    data = cast(StartRequest, request.get_json())
-    print(f"{data['game']['id']} START")
+def handle_start():
+    data = _get_json(StartRequest)
+    print(f"{data.game.id} START")
     return "."
 
 
 @app.post("/move")
-def handle_move() -> MoveResponse:
-    data = cast(MoveRequest, request.get_json())
+def handle_move():
+    data = _get_json(MoveRequest)
     move = logic.get_move(data)
-    print(f"{data['game']['id']} MOVE: {move['move']}")
-    return move
+    print(f"{data.game.id} MOVE: {move.move}")
+    return jsonify(move)
 
 
 @app.post("/end")
-def handle_end() -> str:
-    data = cast(EndRequest, request.get_json())
-
-    print(f"{data['game']['id']} END")
+def handle_end():
+    data = _get_json(EndRequest)
+    print(f"{data.game.id} END")
     return "."
 
 

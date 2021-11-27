@@ -1,18 +1,21 @@
-from typing_extensions import TypedDict
+from dataclasses import dataclass
 
 
-class RoyaleRules(TypedDict):
+@dataclass
+class RoyaleRules:
     shrinkEveryNTurns: int
 
 
-class SquadRules(TypedDict):
+@dataclass
+class SquadRules:
     allowBodyCollisions: bool
     sharedElimination: bool
     sharedHealth: bool
     sharedLength: bool
 
 
-class RulesetSettings(TypedDict):
+@dataclass
+class RulesetSettings:
     foodSpawnChance: int
     minimumFood: int
     hazardDamagePerTurn: int
@@ -20,13 +23,15 @@ class RulesetSettings(TypedDict):
     squad: SquadRules
 
 
-class Ruleset(TypedDict):
+@dataclass
+class Ruleset:
     name: str
     version: str
     settings: RulesetSettings
 
 
-class Game(TypedDict):
+@dataclass
+class Game:
     id: str
     ruleset: Ruleset
     timeout: int

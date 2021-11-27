@@ -1,16 +1,17 @@
+from dataclasses import dataclass
 from typing import List
-
-from typing_extensions import TypedDict
 
 from api_types.rules import Game
 
 
-class Coordinates(TypedDict):
+@dataclass
+class Coordinates:
     x: int
     y: int
 
 
-class Battlesnake(TypedDict):
+@dataclass
+class Battlesnake:
     id: str
     name: str
     squad: str
@@ -22,7 +23,8 @@ class Battlesnake(TypedDict):
     shout: str
 
 
-class Board(TypedDict):
+@dataclass
+class Board:
     height: int
     width: int
     food: List[Coordinates]
@@ -30,7 +32,8 @@ class Board(TypedDict):
     snakes: List[Battlesnake]
 
 
-class State(TypedDict):
+@dataclass
+class State:
     game: Game
     turn: int
     board: Board

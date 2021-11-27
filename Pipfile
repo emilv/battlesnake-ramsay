@@ -9,6 +9,7 @@ mypy = "*"
 typing-extensions = "*"
 quart = "*"
 flask = "*"
+dacite = "*"
 
 [dev-packages]
 

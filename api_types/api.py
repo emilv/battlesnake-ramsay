@@ -1,11 +1,13 @@
+from dataclasses import dataclass
 from typing import Optional
 
-from typing_extensions import Literal, TypedDict
+from typing_extensions import Literal
 
 from api_types.game import State
 
 
-class InfoResponse(TypedDict):
+@dataclass
+class InfoResponse:
     apiversion: str
     author: str
     color: str
@@ -14,10 +16,11 @@ class InfoResponse(TypedDict):
     version: Optional[str]
 
 
+@dataclass
 class StartRequest(State):
     pass
 
-
+@dataclass
 class MoveRequest(State):
     pass
 
@@ -25,10 +28,11 @@ class MoveRequest(State):
 Move = Literal["up", "down", "left", "right"]
 
 
-class MoveResponse(TypedDict):
+@dataclass
+class MoveResponse:
     move: Move
     shout: Optional[str]
 
-
+@dataclass
 class EndRequest(State):
     pass
