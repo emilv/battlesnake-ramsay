@@ -77,7 +77,8 @@ def get_move(state: MoveRequest) -> MoveResponse:
     prio = [
         ("preferred", preferred_moves),
         ("neutral", neutral_moves),
-        ("border", border_moves),
+        ("border neutral", border_moves - disliked_moves),
+        ("border disliked", border_moves),
         ("disliked", disliked_moves),
     ]
 
