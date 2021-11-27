@@ -121,7 +121,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
         if not next_square:
             possible_moves.discard(move)
             continue
-        if next_square.body and not next_square.tail:
+        if next_square.body:
             possible_moves.discard(move)
 
     # Pick move
