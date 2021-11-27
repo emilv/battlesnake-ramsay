@@ -57,7 +57,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
             for move2 in all_moves - {opposites[move1]}:
                 second = first.move(move2)
                 if second:
-                    if second.snake and not second.tail:
+                    if not second.snake and not second.tail:
                         second_possible = True
                     if second.head and second.snake.length >= you.length:
                         fight_moves.add(move1)
