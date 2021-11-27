@@ -108,7 +108,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
                 if not found:
                     print("DEATH BY border?")
                     my_move = direction
-                    continue
+                continue
             if mv.you:
                 print("DEATH BY seppuku?")
                 my_move = direction
