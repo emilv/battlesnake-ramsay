@@ -61,6 +61,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
                         second_possible = True
                     if second.head and second.snake.length >= you.length:
                         fight_moves.add(move1)
+                        second_possible = True
                     if second.food:
                         food_moves.add(move1)
         if not second_possible:
