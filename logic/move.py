@@ -6,7 +6,7 @@ from board import Board
 from logic.fill import flood_fill_depth
 
 
-def best_direction(directions: Set[Move], board: Board, start: Tuple[int, int]) -> Move:
+def best_direction(directions: Set[Move], board: Board, start: Tuple[int, int], current_direction: Move) -> Move:
     x, y = start
     square = board[x][y]
     scored = [(flood_fill_depth(square, direction), direction) for direction in directions]
@@ -14,8 +14,8 @@ def best_direction(directions: Set[Move], board: Board, start: Tuple[int, int]) 
     sort = sorted(filtered, key=lambda x: x[0], reverse=True)
     best_score = sort[0][0]
     best_group = [b for a, b in sort if a == best_score]
-    print(sort)
-    print(best_group)
+    if current_direction in best_group:
+        return current_direction
     return random.choice(best_group)
 
 
@@ -103,7 +103,7 @@ def get_move(state: MoveRequest) -> MoveResponse:
         st = possible_moves & prio_set
         if not st:
             continue
-        my_move = best_direction(st, board, (you.head.x, you.head.y))
+        my_move = best_direction(st, board, (you.head.x, you.head.y), current_direction)
         print(f"PICK best   FROM {txt}")
         found = True
         break
