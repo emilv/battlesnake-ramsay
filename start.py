@@ -1,14 +1,12 @@
 import logging
 import os
-from dataclasses import asdict
 from typing import Type, TypeVar
 
 from dacite import from_dict
 from flask import Flask, jsonify, request
 
-import logic
-from api_types.api import (EndRequest, InfoResponse, MoveRequest, MoveResponse,
-                           StartRequest)
+from api_types.api import EndRequest, InfoResponse, MoveRequest, StartRequest
+from logic.move import get_move
 
 app = Flask(__name__)
 
@@ -45,7 +43,7 @@ def handle_start():
 @app.post("/move")
 def handle_move():
     data = _get_json(MoveRequest)
-    move = logic.get_move(data)
+    move = get_move(data)
     print(f"{data.game.id} MOVE: {move.move}")
     return jsonify(move)
 
