@@ -12,7 +12,7 @@ def _inside(sq: Board.Square) -> bool:
 
 def flood_fill_depth(start: Board.Square, direction: Move) -> int:
     depth = 0
-    max_depth = 48
+    max_depth = 64
     visited: Set[Tuple[int, int]] = set()
     q = collections.deque([start.move(direction)])
     while q:
