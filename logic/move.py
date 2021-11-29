@@ -1,4 +1,3 @@
-import itertools
 import random
 from typing import Dict, Set, Tuple
 
@@ -13,9 +12,11 @@ def best_direction(directions: Set[Move], board: Board, start: Tuple[int, int]) 
     scored = [(flood_fill_depth(square, direction), direction) for direction in directions]
     filtered = [(s, d) for s, d in scored if s]
     sort = sorted(filtered, key=lambda x: x[0], reverse=True)
+    best_score = sort[0][0]
+    best_group = [b for a, b in sort if a == best_score]
     print(sort)
-    _, best_group = next(itertools.groupby(sort, key=lambda x: x[0]))
-    return random.choice([b for _, b in best_group])
+    print(best_group)
+    return random.choice(best_group)
 
 
 def get_move(state: MoveRequest) -> MoveResponse:
