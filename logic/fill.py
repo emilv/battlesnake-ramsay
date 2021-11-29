@@ -10,8 +10,9 @@ def _inside(sq: Board.Square) -> bool:
     return not is_snake
 
 
-def flood_fill_depth(start: Board.Square, direction: Move) -> Optional[int]:
+def flood_fill_depth(start: Board.Square, direction: Move) -> int:
     depth = 0
+    max_depth = 16
     visited: Set[Tuple[int, int]] = set()
     q = collections.deque([start.move(direction)])
     while q:
@@ -23,6 +24,8 @@ def flood_fill_depth(start: Board.Square, direction: Move) -> Optional[int]:
         if not _inside(n):
             continue
         depth += 1
+        if depth > max_depth:
+            return depth
         for direction in ["up", "down", "left", "right"]:
             nn = n.move(direction)
             if not nn or (nn.x, nn.y) in visited:
