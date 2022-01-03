@@ -1,8 +1,22 @@
 import random
-from typing import Dict, Set
+from typing import Dict, Set, Tuple
 
 from api_types.api import Move, MoveRequest, MoveResponse
 from board import Board
+from logic.fill import flood_fill_depth
+
+
+def best_direction(directions: Set[Move], board: Board, start: Tuple[int, int], current_direction: Move) -> Move:
+    x, y = start
+    square = board[x][y]
+    scored = [(flood_fill_depth(square, direction), direction) for direction in directions]
+    filtered = [(s, d) for s, d in scored if s]
+    sort = sorted(filtered, key=lambda x: x[0], reverse=True)
+    best_score = sort[0][0]
+    best_group = [b for a, b in sort if a == best_score]
+    if current_direction in best_group:
+        return current_direction
+    return random.choice(best_group)
 
 
 def get_move(state: MoveRequest) -> MoveResponse:
@@ -87,17 +101,12 @@ def get_move(state: MoveRequest) -> MoveResponse:
     found = False
     for txt, prio_set in prio:
         st = possible_moves & prio_set
-        if not st: continue
-        if current_direction in st:
-            print(f"PICK current FROM {txt}")
-            my_move = current_direction
-            found = True
-            break
-        else:
-            print(f"PICK random  FROM {txt}")
-            my_move = random.choice(list(st))
-            found = True
-            break
+        if not st:
+            continue
+        my_move = best_direction(st, board, (you.head.x, you.head.y), current_direction)
+        print(f"PICK best   FROM {txt}")
+        found = True
+        break
 
     if not found:
         print("DEATH BY head-on crash?")
