@@ -14,13 +14,15 @@ def flood_fill_depth(start: Board.Square, direction: Move) -> int:
     depth = 0
     max_depth = 64
     visited: Set[Tuple[int, int]] = set()
-    q = collections.deque([start.move(direction)])
+
+    n = start.move(direction)
+    if not n:
+        return 0
+
+    q = collections.deque([n])
     while q:
         n = q.popleft()
-        if not n:
-            continue
-        coords = n.x, n.y
-        visited.add(coords)
+        visited.add((n.x, n.y))
         if not _inside(n):
             continue
         depth += 1
